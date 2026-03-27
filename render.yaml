@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: paper-finder
+    runtime: docker
+    envVars:
+      - key: DATABASE_URL
+        sync: false # User must set this in the Render dashboard
+      - key: PORT
+        value: 10000
