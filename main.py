@@ -63,7 +63,7 @@ async def list_sectors():
     return {"sectors": ["all", "ai", "biology", "physics", "cs", "multidisciplinary", "social", "chemistry"]}
 
 @app.get("/download")
-async def download_paper(url: str):
+async def download_paper(url: str, title: str = None):
     """
     Downloads a research paper from a given URL and streams it to the user.
     """
@@ -71,7 +71,7 @@ async def download_paper(url: str):
         raise HTTPException(status_code=400, detail="URL parameter is required")
     
     try:
-        content, filename = await download_pdf(url)
+        content, filename = await download_pdf(url, title=title)
         return StreamingResponse(
             io.BytesIO(content),
             media_type="application/pdf",

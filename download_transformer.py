@@ -3,12 +3,13 @@ import os
 from fetcher import download_pdf
 
 async def download_transformer():
-    # Canonical arXiv URL for "Attention Is All You Need"
+    # Canonical arXiv URL and Title for "Attention Is All You Need"
     url = "https://arxiv.org/abs/1706.03762"
-    print(f"📥 Downloading Transformer paper from: {url}")
+    title = "Attention Is All You Need"
+    print(f"📥 Downloading: {title} from {url}")
     
     try:
-        content, filename = await download_pdf(url)
+        content, filename = await download_pdf(url, title=title)
         os.makedirs("downloads", exist_ok=True)
         save_path = f"downloads/{filename}"
         with open(save_path, "wb") as f:

@@ -215,21 +215,35 @@ async def run_search(topic: str, apis: list, limit: int) -> list:
 
 # ── Paper Downloader ──────────────────────────────────────────────────────────
 
-async def download_pdf(url: str) -> tuple[bytes, str]:
+import re
+
+def sanitize_filename(name: str) -> str:
+    """Removes invalid characters and trims the name."""
+    return re.sub(r'[\\/*?:"<>|]', "", name).strip()[:100]
+
+
+async def download_pdf(url: str, title: str = None) -> tuple[bytes, str]:
     """
-    Downloads a PDF from a given URL, attempting to convert abstract URLs to PDF URLs.
+    Downloads a PDF from a given URL, optionally using a title for the filename.
     Returns (content, filename).
     """
     # 1. Clean and convert common abstract URLs to PDF URLs
     pdf_url = url
-    filename = "paper.pdf"
+    
+    # Default filename logic
+    if title:
+        filename = sanitize_filename(title) + ".pdf"
+    else:
+        filename = "paper.pdf"
 
     if "arxiv.org/abs/" in url:
         pdf_url = url.replace("arxiv.org/abs/", "arxiv.org/pdf/") + ".pdf"
-        filename = pdf_url.split("/")[-1]
+        if not title:
+            filename = pdf_url.split("/")[-1]
     elif "arxiv.org/pdf/" in url and not url.endswith(".pdf"):
         pdf_url = url + ".pdf"
-        filename = pdf_url.split("/")[-1]
+        if not title:
+            filename = pdf_url.split("/")[-1]
     elif "semanticscholar.org" in url:
         # Semantic Scholar abstract URLs aren't directly convertible to PDF without API/extra logic
         # For now, we hope the URL provided in search results is a direct/accessible PDF if it ends in .pdf
