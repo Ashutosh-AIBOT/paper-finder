@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+venv/
+env/
+.env
+deploy/venv/
+
+# Local data
+downloads/
+*.log
+results.json
+search_results.json
+
+# IDE
+.vscode/
+.idea/
